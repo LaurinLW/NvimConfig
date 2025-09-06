@@ -26,10 +26,20 @@ eslint.setup({
 
 vim.o.clipboard = "unnamedplus"
 
+vim.api.nvim_create_augroup("AutoFormat", { clear = true })
+
 vim.api.nvim_create_autocmd("BufWritePre",
   {
-    pattern = { "*.js", "*.ts", "*.html", "*.css", "*.lua", "*.graphql", "*.json", "*.md", },
+    pattern = { "*.js", "*.ts", "*.html", "*.css", "*.lua", "*.graphql", "*.json", "*.md" },
     callback = function()
       vim.lsp.buf.format()
     end
   })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = "AutoFormat",
+  pattern = { "*.py" },
+  callback = function()
+    vim.cmd(":silent !black --preview --line-length 240 %")
+  end,
+})
