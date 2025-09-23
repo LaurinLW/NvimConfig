@@ -1,6 +1,13 @@
 return {
   -- These are some examples, uncomment them if you want to see them work!
   {
+    "nvim-telescope/telescope.nvim",
+    config = function()
+      require "configs.telescope"
+    end,
+  },
+
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
