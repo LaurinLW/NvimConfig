@@ -37,7 +37,6 @@ map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Git diff" })
 
 -- Terminal mappings
 map("n", "<leader>tt", "<cmd>terminal<cr>", { desc = "Toggle terminal" })
-map("n", "<leader>tf", "<cmd>Telescope termfinder find<cr>", { desc = "Toggle floating terminal" })
 
 -- Search and replace
 map("n", "<leader>sr", "<cmd>Telescope live_grep<cr>", { desc = "Search and replace in project" })

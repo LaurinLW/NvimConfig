@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   group = "AutoFormat",
   pattern = { "*.py" },
   callback = function()
-    vim.cmd("silent !black --preview --line-length 240 " .. vim.fn.expand("%:p"))
+    vim.cmd("silent !black --preview --line-length 140 " .. vim.fn.expand("%:p"))
     vim.cmd("silent e!") -- Force reload the file to show changes
   end,
 })

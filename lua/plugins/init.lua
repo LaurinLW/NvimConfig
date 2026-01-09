@@ -15,11 +15,23 @@ return {
   },
 
   {
+    "antosha417/nvim-lsp-file-operations",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-tree.lua",
+    },
+    config = function()
+      require("lsp-file-operations").setup()
+    end,
+  },
+
+  {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
         -- LSP servers
-        "html", "cssls", "angular-language-server", "graphql", "typescript-language-server", "pyright",
+        "html", "cssls", "angular-language-server", "graphql", "typescript-language-server", "basedpyright",
         -- Formatters and linters for none-ls
         "prettier", "eslint_d", "black"
       }
