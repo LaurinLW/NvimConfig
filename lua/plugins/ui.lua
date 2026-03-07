@@ -12,6 +12,14 @@ return {
       require('tokyonight').setup {
         style = 'night',
         styles = { comments = { italic = false } },
+        on_highlights = function(hl, c)
+          -- Make the split/window separator line visible with a blue accent
+          hl.WinSeparator = { fg = c.blue, bg = c.bg }
+          -- nvim-tree uses its own separator group — override it to match
+          hl.NvimTreeWinSeparator = { fg = c.blue, bg = c.bg }
+          -- Dim inactive windows so the focused split stands out
+          hl.NormalNC = { bg = c.bg_dark }
+        end,
       }
       vim.cmd.colorscheme 'tokyonight-night'
     end,
@@ -95,10 +103,10 @@ return {
         { '<leader>s',   group = '[S]earch' },
         { '<leader>g',   group = '[G]it' },
         { '<leader>b',   group = '[B]uffer' },
+        { '<leader>d',   group = '[D]ebug' },
         { '<leader>r',   group = '[R]ename / [R]eplace' },
         { '<leader>c',   group = '[C]ode' },
         { '<leader>t',   group = '[T]erminal / [T]oggle' },
-        { '<leader>d',   group = '[D]iagnostics' },
         { 'g',           group = '[G]oto' },
       },
     },

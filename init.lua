@@ -40,7 +40,7 @@ vim.o.numberwidth = 2
 vim.o.laststatus = 3
 vim.o.list = false
 vim.o.inccommand = 'split'
-vim.o.fillchars = 'eob: '
+vim.o.fillchars = 'eob: ,vert:│'
 vim.opt.listchars = { trail = '·', nbsp = '␣' }
 vim.opt.whichwrap:append '<>[]hl'
 
