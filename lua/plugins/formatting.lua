@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Formatting & linting:
---   conform.nvim  — format-on-save (prettier, black, stylua, clang-format)
+--   conform.nvim  — format-on-save (prettier, ruff, stylua, clang-format)
 --   ESLint runs as a proper LSP server via eslint-lsp (configured in lsp.lua)
 -- =============================================================================
 return {
@@ -24,7 +24,7 @@ return {
 
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "black" },
+				python = { "ruff_format" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				javascriptreact = { "prettier" },
@@ -43,9 +43,6 @@ return {
 			},
 
 			formatters = {
-				black = {
-					prepend_args = { "--preview", "--line-length", "140" },
-				},
 				["clang-format"] = {
 					prepend_args = { "--style=file", "--fallback-style=LLVM" },
 				},

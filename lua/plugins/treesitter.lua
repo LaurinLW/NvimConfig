@@ -43,4 +43,25 @@ return {
       indent = { enable = true },
     },
   },
+
+  -- Auto-close and auto-rename HTML/JSX/TSX/Angular tags
+  {
+    'windwp/nvim-ts-autotag',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {
+      opts = {
+        enable_close = true,
+        enable_rename = true,
+        enable_close_on_slash = true,
+      },
+      per_filetype = {
+        -- Angular templates are detected as 'htmlangular'
+        ['htmlangular'] = {
+          enable_close = true,
+          enable_rename = true,
+          enable_close_on_slash = true,
+        },
+      },
+    },
+  },
 }

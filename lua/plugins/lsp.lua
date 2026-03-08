@@ -1,7 +1,7 @@
 -- =============================================================================
 -- LSP: nvim-lspconfig + mason + mason-lspconfig + fidget + blink.cmp
 --      Language servers: lua, html, css, angular, graphql, typescript,
---                        python (basedpyright), c/c++ (clangd)
+--                        python (basedpyright, ruff), c/c++ (clangd)
 -- =============================================================================
 return {
 	{
@@ -132,7 +132,10 @@ return {
 
 				basedpyright = {
 					settings = {
-						basedpyright = {
+			-- Ruff: fast Python linter + formatter as LSP (diagnostics, code actions, import sort)
+			ruff = {},
+
+			basedpyright = {
 							analysis = {
 								typeCheckingMode = "basic",
 								reportMissingTypeStubs = false,
