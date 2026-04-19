@@ -75,6 +75,17 @@ vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = '[B]uffer [D]elete' })
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>', { desc = 'Prev buffer' })
 
+-- Close window and wipe buffer if it's the last window showing it
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    local wins = vim.fn.win_findbuf(buf)
+    if #wins <= 1 then
+      vim.cmd("bwipeout")
+    end
+  end,
+})
+
 -- Terminal
 vim.keymap.set('n', '<leader>tt', '<cmd>terminal<CR>', { desc = 'Open [T]erminal' })
 vim.keymap.set('n', '<leader>h', '<cmd>split | terminal<CR>', { desc = 'Terminal [H]orizontal split' })
