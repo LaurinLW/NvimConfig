@@ -130,7 +130,14 @@ vim.diagnostic.config {
   underline = { severity = { min = vim.diagnostic.severity.WARN } },
   virtual_text = true,
   virtual_lines = false,
-  jump = { float = true },
+  -- 0.12 dropped the jump.float flag. Open the float after a jump instead.
+  jump = {
+    on_jump = function(diagnostic)
+      if diagnostic then
+        vim.diagnostic.open_float()
+      end
+    end,
+  },
 }
 
 -- =============================================================================

@@ -130,12 +130,13 @@ return {
 					end,
 				},
 
+				-- Ruff: Python diagnostics, code actions, and import sort.
+				-- Its own server. Nesting this under basedpyright.settings never started it.
+				ruff = {},
+
 				basedpyright = {
 					settings = {
-			-- Ruff: fast Python linter + formatter as LSP (diagnostics, code actions, import sort)
-			ruff = {},
-
-			basedpyright = {
+						basedpyright = {
 							analysis = {
 								typeCheckingMode = "basic",
 								reportMissingTypeStubs = false,
@@ -156,15 +157,9 @@ return {
 						"--completion-style=detailed",
 						"--pch-storage=memory",
 					},
-					root_dir = function(fname)
-						return require("lspconfig.util").root_pattern(
-							"compile_commands.json",
-							".clangd",
-							"CMakeLists.txt",
-							"Makefile",
-							".git"
-						)(fname)
-					end,
+					-- On 0.12, root_dir is fun(bufnr, on_dir). A function that returns a
+					-- path is ignored, so clangd never attaches. lspconfig's
+					-- root_markers already find compile_commands.json and .git.
 				},
 			}
 
