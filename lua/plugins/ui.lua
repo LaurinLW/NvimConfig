@@ -102,6 +102,7 @@ return {
         { '<leader>f',   group = '[F]ind' },
         { '<leader>s',   group = '[S]earch' },
         { '<leader>g',   group = '[G]it' },
+        { '<leader>H',   group = '[H]unk' },
         { '<leader>b',   group = '[B]uffer' },
         { '<leader>d',   group = '[D]ebug' },
         { '<leader>r',   group = '[R]ename / [R]eplace' },

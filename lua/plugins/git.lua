@@ -23,17 +23,15 @@ return {
         map(']h', function() gs.nav_hunk 'next' end, 'Next hunk')
         map('[h', function() gs.nav_hunk 'prev' end, 'Prev hunk')
 
-        -- Hunk actions
-        map('<leader>hs', gs.stage_hunk,        'Stage hunk')
-        map('<leader>hr', gs.reset_hunk,        'Reset hunk')
-        map('<leader>hS', gs.stage_buffer,      'Stage buffer')
-        map('<leader>hR', gs.reset_buffer,      'Reset buffer')
-        map('<leader>hu', gs.undo_stage_hunk,   'Undo stage hunk')
-        map('<leader>hp', gs.preview_hunk,      'Preview hunk')
-        map('<leader>hd', gs.diffthis,          'Diff this')
-
-        -- Blame
-        map('<leader>hb', function() gs.blame_line { full = true } end, 'Blame line')
+        -- <leader>h opens a terminal, so hunk actions live on <leader>H.
+        map('<leader>Hs', gs.stage_hunk,        'Stage hunk')
+        map('<leader>Hr', gs.reset_hunk,        'Reset hunk')
+        map('<leader>HS', gs.stage_buffer,      'Stage buffer')
+        map('<leader>HR', gs.reset_buffer,      'Reset buffer')
+        map('<leader>Hu', gs.undo_stage_hunk,   'Undo stage hunk')
+        map('<leader>Hp', gs.preview_hunk,      'Preview hunk')
+        map('<leader>Hd', gs.diffthis,          'Diff this')
+        map('<leader>Hb', function() gs.blame_line { full = true } end, 'Blame line')
         map('<leader>tb', gs.toggle_current_line_blame, 'Toggle line blame')
       end,
     },

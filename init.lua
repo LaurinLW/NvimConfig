@@ -94,7 +94,7 @@ vim.keymap.set('t', '<C-x>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>ds', vim.diagnostic.setloclist, { desc = '[D]iagnostic [S]etloclist' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic location list' })
 
 -- LSP keymaps (set globally so they work even before LspAttach in some edge cases,
 -- but the buffer-local ones in lsp.lua take precedence)

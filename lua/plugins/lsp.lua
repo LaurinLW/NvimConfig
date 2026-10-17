@@ -1,5 +1,5 @@
 -- =============================================================================
--- LSP: nvim-lspconfig + mason + mason-lspconfig + fidget + blink.cmp
+-- LSP: nvim-lspconfig + mason + mason-tool-installer + fidget + blink.cmp
 --      Language servers: lua, html, css, angular, graphql, typescript,
 --                        python (basedpyright, ruff), c/c++ (clangd)
 -- =============================================================================
@@ -8,7 +8,6 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{ "mason-org/mason.nvim", opts = {} },
-			"mason-org/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			{ "j-hui/fidget.nvim", opts = {} },
 			-- blink.cmp provides extra LSP capabilities
@@ -43,6 +42,8 @@ return {
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client and client:supports_method("textDocument/documentHighlight", event.buf) then
 						local hl_group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+						-- A second client attaching to this buffer would stack these.
+						vim.api.nvim_clear_autocmds({ group = hl_group, buffer = event.buf })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
 							group = hl_group,
@@ -53,13 +54,6 @@ return {
 							group = hl_group,
 							callback = vim.lsp.buf.clear_references,
 						})
-						vim.api.nvim_create_autocmd("LspDetach", {
-							group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
-							callback = function(e)
-								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = e.buf })
-							end,
-						})
 					end
 
 					-- Inlay hints toggle
@@ -68,6 +62,16 @@ return {
 							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 						end, "[T]oggle Inlay [H]ints")
 					end
+				end,
+			})
+
+			-- Registered once. Creating it inside LspAttach with clear=true
+			-- dropped the handler for every buffer except the last one.
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
+				callback = function(event)
+					vim.lsp.buf.clear_references()
+					pcall(vim.api.nvim_clear_autocmds, { group = "lsp-highlight", buffer = event.buf })
 				end,
 			})
 
@@ -84,14 +88,11 @@ return {
 			local servers = {
 				lua_ls = {
 					on_init = function(client)
-						if client.workspace_folders then
-							local path = client.workspace_folders[1].name
-							if
-								path ~= vim.fn.stdpath("config")
-								and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
-							then
-								return
-							end
+						local folder = client.workspace_folders and client.workspace_folders[1]
+						local path = folder and folder.name
+						-- Other Lua projects were getting the entire Neovim runtime as a library.
+						if path ~= vim.fn.stdpath("config") then
+							return
 						end
 						client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua or {}, {
 							runtime = { version = "LuaJIT" },
@@ -100,6 +101,7 @@ return {
 								library = vim.api.nvim_get_runtime_file("", true),
 							},
 						})
+						client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
 					end,
 					settings = { Lua = {} },
 				},
@@ -131,8 +133,12 @@ return {
 				},
 
 				-- Ruff: Python diagnostics, code actions, and import sort.
-				-- Its own server. Nesting this under basedpyright.settings never started it.
-				ruff = {},
+				-- basedpyright keeps hover and type info.
+				ruff = {
+					on_attach = function(client)
+						client.server_capabilities.hoverProvider = false
+					end,
+				},
 
 				basedpyright = {
 					settings = {
@@ -178,7 +184,6 @@ return {
 				"clangd",
 				-- Formatters / linters (used by formatting.lua)
 				"prettier",
-				"black",
 				"ruff",
 				"stylua",
 				"clang-format",
