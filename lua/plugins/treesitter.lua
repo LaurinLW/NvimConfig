@@ -1,50 +1,24 @@
--- =============================================================================
--- Treesitter: syntax highlighting + indentation for all target languages
--- =============================================================================
 return {
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs',
-    opts = {
-      ensure_installed = {
-        -- Web / Angular stack
-        'html',
-        'css',
-        'javascript',
-        'typescript',
-        'tsx',
-        'graphql',
-        'json',
-        'jsonc',
-        -- Python
-        'python',
-        -- C / C++
-        'c',
-        'cpp',
-        -- Lua / Neovim config
-        'lua',
-        'luadoc',
-        'vim',
-        'vimdoc',
-        -- Shell / tooling
-        'bash',
-        'yaml',
-        'toml',
-        'dockerfile',
-        -- Docs
-        'markdown',
-        'markdown_inline',
-        'regex',
-        'diff',
-      },
-      auto_install = true,
-      highlight = { enable = true },
-      indent = { enable = true },
-    },
+    config = function()
+      local langs = {
+        'html', 'css', 'javascript', 'typescript', 'tsx', 'graphql', 'json',
+        'python', 'c', 'cpp', 'lua', 'luadoc', 'vim', 'vimdoc',
+        'bash', 'yaml', 'toml', 'dockerfile', 'markdown', 'markdown_inline', 'regex', 'diff',
+      }
+      require('nvim-treesitter').install(langs):wait(300000)
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
+    end,
   },
-
-  -- Auto-close and auto-rename HTML/JSX/TSX/Angular tags
   {
     'windwp/nvim-ts-autotag',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -55,7 +29,6 @@ return {
         enable_close_on_slash = true,
       },
       per_filetype = {
-        -- Angular templates are detected as 'htmlangular'
         ['htmlangular'] = {
           enable_close = true,
           enable_rename = true,
